@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    {% for post in posts %}
+        <article class="media content-section" style="width:75%; margin-top:2em; border: 1px solid rgba(212, 212, 212, 0.555);padding: 1.5em;">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ post.author.username }}</a>
+              <small class="text-muted">{{ post.date_posted }}</small>
+            </div>
+
+            {% if post.user_id == current_user.id %}
+              <h2><a class="article-title" href="{{ url_for('posts.updatePost', postID=post.id) }}">{{ post.title }}</a></h2>
+            {% else %}
+              <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
+            {% endif %}
+
+            
+            <p class="article-content">{{ post.content }}</p>
+
+            {% if post.user_id == current_user.id %}
+              <a class="btn btn-danger" href="{{ url_for('posts.deletePost', postID=post.id) }}" >DELETE</a>
+            {% endif %}
+
+          </div>
+        </article>
+    {% endfor %}
+
+    <div style="display: flex;padding-top: 3em;padding-bottom: 3em;">  
+    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
+
+      {% if page_num %}    
+          <div style="width: 2em; height:2em; display: flex;align-items: center;justify-content: center;background-color: black;color:white; margin-left: 0.3em;">
+            <a style="color: white;text-decoration: none;" href="?page={{url_for('home.home', page=page_num)}}">{{ page_num }}</a>
+          </div>
+      {% endif %}
+
+   {% endfor %}
+  </div>
+{% endblock content %}
